@@ -36,9 +36,6 @@ public class PVector {
         return this;
     }
 
-    /**
-     * Overload that accepts a double scalar.
-     */
     public PVector mult(double n) {
         this.x *= n;
         this.y *= n;

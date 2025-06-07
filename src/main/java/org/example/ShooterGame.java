@@ -34,8 +34,8 @@ public class ShooterGame extends Application {
     private long lastSpawnTime = 0;
 
     private boolean gameOver = false;
-    private AnimationTimer loop;           // make it a field
-    private Pane uiOverlay;                // for Game Over screen
+    private AnimationTimer loop;
+    private Pane uiOverlay;
     private int score = 0;
     private Label scoreLabel;
 
@@ -55,20 +55,16 @@ public class ShooterGame extends Application {
         scoreLabel = new Label("Score: 0");
         scoreLabel.setFont(Font.font(20));
         scoreLabel.setTextFill(Color.BLACK);
-        // put it in a pane that lives in the top of the BorderPane
         StackPane topPane = new StackPane(scoreLabel);
         topPane.setAlignment(Pos.TOP_LEFT);
-        //topPane.setPadding(new Insets(10));
         root.setTop(topPane);
 
         addWalker();
 
-        // initialize spawn timer and spawn one enemy
         lastSpawnTime = System.nanoTime() - SPAWN_INTERVAL_NS;
 
         scene.addEventFilter(MouseEvent.ANY, e -> mouse.set(e.getX(), e.getY(), 0));
         scene.setOnMouseClicked(e -> shoot());
-
 
         // Prepare an overlay Pane (initially invisible)
         uiOverlay = new Pane();
@@ -175,20 +171,13 @@ public class ShooterGame extends Application {
                         score++;
                         scoreLabel.setText("Score: " + score);
                     } else {
-                        // compute a fraction from 1.0 (full health) down to 0.0 (just hit)
                         double frac = (double)e.health / e.maxHealth;
-
-                        // baseColor is the original crimson
                         Color base = Color.CRIMSON;
-
-                        // build a new color with the same hue & brightness, but reduced saturation
-                        // (so it “fades” toward pink/white as it takes damage)
                         Color faded = Color.hsb(
                                 base.getHue(),
                                 base.getSaturation() * frac,
                                 base.getBrightness()
                         );
-
                         e.shape.setFill(faded);
                     }
                     break;
@@ -217,7 +206,6 @@ public class ShooterGame extends Application {
         launch(args);
     }
 
-    /** Simple holder for each bullet’s shape + velocity. */
     private static class Bullet {
         final Circle shape;
         final double dx, dy;
@@ -243,7 +231,7 @@ public class ShooterGame extends Application {
 
         Text prompt = new Text("Press ENTER to restart");
         prompt.setFont(Font.font(24));
-        prompt.setFill(Color.WHITE);
+        prompt.setFill(Color.LIGHTPINK);
         prompt.setX(Settings.SCENE_WIDTH/2 - prompt.getLayoutBounds().getWidth()/2);
         prompt.setY(Settings.SCENE_HEIGHT/2 + 50);
 
@@ -253,8 +241,6 @@ public class ShooterGame extends Application {
 
     private void restartGame() {
         // Clear everything
-        score = 0;
-        scoreLabel.setText("Score: " + score);
         uiOverlay.getChildren().clear();
         uiOverlay.setVisible(false);
         playfield.getChildren().clear();
@@ -265,6 +251,8 @@ public class ShooterGame extends Application {
         // Rebuild initial state
         addWalker();
         lastSpawnTime = System.nanoTime();
+        score = 0;
+        scoreLabel.setText("Score: " + score);
         gameOver = false;
         loop.start();
     }
